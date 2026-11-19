@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Telemetry Connection Test</title>
+</head>
+<body>
+    <h2>Python WebSocket Test</h2>
+    <p id="status">Connecting...</p>
+    <pre id="data">Waiting for telemetry...</pre>
+
+    <script>
+        const status = document.getElementById("status");
+        const output = document.getElementById("data");
+
+        const socket = new WebSocket("ws://127.0.0.1:8765");
+
+        socket.onopen = () => {
+            status.textContent = "Connected to Python!";
+        };
+
+        socket.onmessage = (event) => {
+            const telemetry = JSON.parse(event.data);
+
+            output.textContent =
+                JSON.stringify(telemetry, null, 2);
+
+            console.log("Received:", telemetry);
+        };
+
+        socket.onerror = () => {
+            status.textContent = "WebSocket connection error";
+        };
+
+        socket.onclose = () => {
+            status.textContent = "Disconnected";
+        };
+    </script>
+</body>
+</html>
